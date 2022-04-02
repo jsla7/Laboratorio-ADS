@@ -46,7 +46,6 @@ namespace ADSProject.Controllers
                 {
                     estudiante = estudianteRepository.obtenerEstudiantePorID(idEstudiante.Value);
                 }
-                // Indica el tipo de operacion que es esta realizando
                 ViewData["Operaciones"] = operaciones;
 
                 return View(estudiante);
@@ -64,10 +63,10 @@ namespace ADSProject.Controllers
         {
             try
             {
-                if(estudianteViewModel.idEstudiante == 0) // En caso de insertar
+                if(estudianteViewModel.idEstudiante == 0) 
                 {
                     estudianteRepository.agregarEstudiante(estudianteViewModel);
-                } else // En caso de actualizar
+                } else
                 {
                     estudianteRepository.actualizarEstudiante
                         (estudianteViewModel.idEstudiante, estudianteViewModel);

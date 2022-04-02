@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProyectoADS.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,9 @@ namespace ADSProject
 
             // Inyeccion de dependencias
             services.AddSingleton<IEstudianteRepository, EstudianteRepository>();
+            services.AddSingleton<IMateriaRepository, MateriaRepository>();
+            services.AddSingleton<IProfesorRepository, ProfesorRepository>();
+            services.AddSingleton<ICarreraRepository, CarreraRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

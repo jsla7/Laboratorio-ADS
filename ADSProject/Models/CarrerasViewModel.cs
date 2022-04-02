@@ -7,18 +7,22 @@ using System.Threading.Tasks;
 
 namespace ProyectoADS.Models
 {
-    public class MateriasViewModel
+    public class CarrerasViewModel
     {
 
         [Display(Name = "ID")]
         [Required(ErrorMessage = Constants.REQUIRED_FIELD)]
-        public int IdMateria { get; set; }
+        public int idCarrera { get; set; }
 
         [Required(ErrorMessage = Constants.REQUIRED_FIELD)]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "La longitud del campo no debe ser mayor a 50 caracteres ni menor de 3 caracteres.")]
-        [Display(Name = "Materia")]
-        public string Materia { get; set; }
+        [Display(Name = "Codigo")]
+        public string codigoCarrera { get; set; }
 
+        [Required(ErrorMessage = Constants.REQUIRED_FIELD)]
+        [StringLength(50, MinimumLength = 10, ErrorMessage = "La longitud del campo no debe ser mayor a 50 caracteres ni menor de 10 caracteres.")]
+        [Display(Name = "Carrera")]
+        public string nombreCarrera { get; set; }
 
     }
 }
