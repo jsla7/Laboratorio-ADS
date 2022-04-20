@@ -1,0 +1,134 @@
+﻿@model ProyectoADS.Models.GrupoViewModel
+@using ProyectoADS.Repository 
+@using ProyectoADS.Models
+@using ProyectoADS.Controllers
+@{
+    ViewData["Title"] = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ICarreraRepository carreraRepository = new CarreraRepository();
+
+    IMateriaRepository materiaRepository = new MateriaRepository(); ;
+    
+    IProfesorRepository profesorRepository = new ProfesorRepository();
+
+
+}
+
+<h4>Grupo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <input type="hidden" id="operacion" value="@ViewData["Operaciones"]" />
+        <input type="hidden" id="_redirectURL" value="@Url.Action("Index", "Grupos")" />
+        <form asp-action="Form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="idGrupo" class="form-control" type="hidden" />
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="idCarrera" class="control-label"></label>
+                
+                <select class="form-control" asp-for="idCarrera">
+
+                    @{var it = carreraRepository.obtenerCarreras();
+                    }
+                    <option> Selecciona Carrera </option>
+
+                    @foreach (var item in it)
+                    {
+                <option value="@item.idCarrera"> @item.nombreCarrera </option>
+                    }
+
+
+                </select>
+
+                <span asp-validation-for="idCarrera" class="text-danger"></span>
+            </div>
+
+
+
+
+
+            <div class="form-group">
+                <label asp-for="idMateria" class="control-label"></label>
+
+                <select class="form-control" asp-for="idMateria">
+
+                    @{var it2 = materiaRepository.obtenerMaterias();
+                    }
+                    <option> Selecciona Materia </option>
+
+                    @foreach (var item2 in it2)
+                    {
+
+                        <option value="@item2.IdMateria"> @item2.Materia </option>
+                    }
+
+                </select>
+
+                <span asp-validation-for="idMateria" class="text-danger"></span>
+            </div>
+
+
+
+
+            <div class="form-group">
+                <label asp-for="idProfesor" class="control-label"></label>
+                <select class="form-control" asp-for="idProfesor">
+
+                    @{var it3 = profesorRepository.obtenerProfesor();
+                    }
+                    <option> Seleccione Profesor </option>
+
+                    @foreach (var item3 in it3)
+                    {
+
+                    <option value="@item3.idProfesor"> 
+                    
+                        @item3.nombresProfesor  @item3.apellidosProfesor
+                    
+                    </option>
+                    }
+
+                </select>
+                <span asp-validation-for="idProfesor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ciclo" class="control-label"></label>
+                <input asp-for="Ciclo" class="form-control" />
+                <span asp-validation-for="Ciclo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="anio" class="control-label"></label>
+                <input asp-for="anio" class="form-control" />
+                <span asp-validation-for="anio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Regresar</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>$(document).ready(function () {
+            // Cuando la operacion sobre el formulario es de lectura.
+            if ($("#operacion").val() == "leer") {
+
+                $("form").find("input,select").attr("disabled", true);
+
+            }
+
+        });
+
+        $("form").addClass("form-ajax");
+        initAjaxForm();</script>
+}

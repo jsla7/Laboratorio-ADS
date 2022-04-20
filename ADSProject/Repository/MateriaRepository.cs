@@ -17,7 +17,8 @@ namespace ProyectoADS.Repository
 
             lstMaterias = new List<MateriasViewModel>
             {
-            new MateriasViewModel{IdMateria = 1, Materia = "Analisis de sistemas"}
+            new MateriasViewModel{IdMateria = 1, Materia = "Analisis de sistemas"},
+            new MateriasViewModel{IdMateria = 2, Materia = "Desarrollo de software I"}
             };
         }
 

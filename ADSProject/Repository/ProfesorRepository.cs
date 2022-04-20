@@ -16,7 +16,9 @@ namespace ProyectoADS.Repository
             lstProfesores = new List<ProfesorViewModel>
             {
                 new ProfesorViewModel{ idProfesor = 1, nombresProfesor = "Raul", apellidosProfesor = "Gonzales",
-                    correoProfesor = "rg001@usonsonate.edu.sv"}
+                    correoProfesor = "rg001@usonsonate.edu.sv"},
+                new ProfesorViewModel{ idProfesor = 2, nombresProfesor = "Manuel", apellidosProfesor = "Urrutia",
+                    correoProfesor = "mu001@usonsonate.edu.sv"}
 
             };
         }

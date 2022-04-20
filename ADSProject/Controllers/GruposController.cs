@@ -9,23 +9,21 @@ using System.Threading.Tasks;
 
 namespace ProyectoADS.Controllers
 {
-    public class MateriaController : Controller
+    public class GruposController : Controller
     {
-        private readonly IMateriaRepository materiaRepository;
 
-        public MateriaController(IMateriaRepository materiaRepository)
+        private readonly IGrupoRepository grupoRepository;
+
+        public GruposController(IGrupoRepository grupoRepository)
         {
-            this.materiaRepository = materiaRepository;
+            this.grupoRepository = grupoRepository;
         }
 
-
-        [HttpGet]
         public IActionResult Index()
         {
             try
             {
-                var item = materiaRepository.obtenerMaterias();
-
+                var item = grupoRepository.obtenerGrupos();
                 return View(item);
             }
             catch (Exception)
@@ -35,22 +33,20 @@ namespace ProyectoADS.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult Form(int? IdMateria, Operaciones operaciones) 
-        {
 
+        [HttpGet]
+        public IActionResult Form(int? idGrupo, Operaciones operaciones)
+        {
             try
             {
-                var materia = new MateriasViewModel();
+                var grupo = new GrupoViewModel();
 
-                if (IdMateria.HasValue)
+                if (idGrupo.HasValue)
                 {
-                    materia = materiaRepository.obtenerMateriaPorID(IdMateria.Value);
+                    grupo = grupoRepository.obtenerGrupoPorID(idGrupo.Value);
                 }
-
                 ViewData["Operaciones"] = operaciones;
-
-                return View(materia);
+                return View(grupo);
 
             }
             catch (Exception)
@@ -58,23 +54,26 @@ namespace ProyectoADS.Controllers
 
                 throw;
             }
-
         }
 
-        [HttpPost]
 
-        public IActionResult Form(MateriasViewModel materiaViewModel)
+
+
+        [HttpPost]
+        public IActionResult Form(GrupoViewModel grupoViewModel)
         {
             try
             {
-                if (materiaViewModel.IdMateria == 0)
+
+                if (grupoViewModel.idGrupo == 0)
                 {
-                    materiaRepository.agregarMateria(materiaViewModel);
+                    grupoRepository.agregarGrupo(grupoViewModel);
                 }
                 else
                 {
-                    materiaRepository.actualizarMateria(materiaViewModel.IdMateria, materiaViewModel);
+                    grupoRepository.actualizarGrupo(grupoViewModel.idGrupo, grupoViewModel);
                 }
+
 
                 return RedirectToAction("Index");
             }
@@ -87,11 +86,11 @@ namespace ProyectoADS.Controllers
 
 
         [HttpPost]
-        public IActionResult Delete(int IdMateria)
+        public IActionResult Delete(int idGrupo)
         {
             try
             {
-                materiaRepository.eliminarMateria(IdMateria);
+                grupoRepository.eliminarGrupo(idGrupo);
             }
             catch (Exception)
             {
@@ -101,6 +100,10 @@ namespace ProyectoADS.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+
+
 
     }
 }

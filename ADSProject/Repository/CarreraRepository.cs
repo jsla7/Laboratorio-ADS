@@ -14,12 +14,15 @@ namespace ProyectoADS.Repository
 
         public CarreraRepository()
         {
-
             lstCarreras = new List<CarrerasViewModel>
             {
             new CarrerasViewModel
-            {idCarrera = 1, codigoCarrera = "I04", nombreCarrera = "Ingenieria en sistemas"}
+            {idCarrera = 1, codigoCarrera = "I04", nombreCarrera = "Ingenieria en sistemas"},
+            new CarrerasViewModel
+            {idCarrera = 2, codigoCarrera = "I01", nombreCarrera = "Ingenieria en agronegocios"}
+
             };
+
         }
 
         public int agregarCarrera(CarrerasViewModel carrerasViewModel)

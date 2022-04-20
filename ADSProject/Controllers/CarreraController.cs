@@ -87,7 +87,7 @@ namespace ProyectoADS.Controllers
         }
 
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult Delete(int idCarrera)
         {
             try
