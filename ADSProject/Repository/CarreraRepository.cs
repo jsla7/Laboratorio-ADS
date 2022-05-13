@@ -1,4 +1,5 @@
-﻿using ProyectoADS.Models;
+﻿using ProyectoADS.Data;
+using ProyectoADS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,34 +11,22 @@ namespace ProyectoADS.Repository
     {
 
         private readonly List<CarrerasViewModel> lstCarreras;
+        private readonly ApplicationDbContext applicationDbContext;
 
 
-        public CarreraRepository()
+        public CarreraRepository(ApplicationDbContext applicationDbContext)
         {
-            lstCarreras = new List<CarrerasViewModel>
-            {
-            new CarrerasViewModel
-            {idCarrera = 1, codigoCarrera = "I04", nombreCarrera = "Ingenieria en sistemas"},
-            new CarrerasViewModel
-            {idCarrera = 2, codigoCarrera = "I01", nombreCarrera = "Ingenieria en agronegocios"}
-
-            };
-
+            this.applicationDbContext = applicationDbContext;
         }
 
         public int agregarCarrera(CarrerasViewModel carrerasViewModel)
         {
             try
             {
-                if (lstCarreras.Count > 0)
-                {
-                    carrerasViewModel.idCarrera = lstCarreras.Last().idCarrera + 1;
-                }
-                else
-                {
-                    carrerasViewModel.idCarrera = 1;
-                }
-                lstCarreras.Add(carrerasViewModel);
+
+                applicationDbContext.Carreras.Add(carrerasViewModel);
+                applicationDbContext.SaveChanges();
+
                 return carrerasViewModel.idCarrera;
             }
             catch (Exception)
@@ -46,11 +35,17 @@ namespace ProyectoADS.Repository
                 throw;
             }
         }
+
         public int actualizarCarrera(int idCarrera, CarrerasViewModel carrerasViewModel)
         {
             try
             {
-                lstCarreras[lstCarreras.FindIndex(x => x.idCarrera == idCarrera)] = carrerasViewModel;
+                var item = applicationDbContext.Carreras.SingleOrDefault(x => x.idCarrera == idCarrera);
+
+                applicationDbContext.Entry(item).CurrentValues.SetValues(carrerasViewModel);
+
+                applicationDbContext.SaveChanges();
+
                 return carrerasViewModel.idCarrera;
             }
             catch (Exception)
@@ -64,7 +59,17 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                lstCarreras.RemoveAt(lstCarreras.FindIndex(x => x.idCarrera == idCarrera));
+                var item = applicationDbContext.Carreras.SingleOrDefault(x => x.idCarrera == idCarrera);
+
+
+                item.estado = false;
+
+                applicationDbContext.Attach(item);
+
+                applicationDbContext.Entry(item).Property(x => x.estado).IsModified = true;
+
+                applicationDbContext.SaveChanges();
+
                 return true;
             }
             catch (Exception)
@@ -78,7 +83,7 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                var item = lstCarreras.Find(x => x.idCarrera == idCarrera);
+                var item = applicationDbContext.Carreras.SingleOrDefault(x => x.idCarrera == idCarrera);
                 return item;
             }
             catch (Exception)
@@ -92,7 +97,8 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                return lstCarreras;
+                // Obtener todos las carreras con filtro (estado = 1)
+                return applicationDbContext.Carreras.Where(x => x.estado == true).ToList();
             }
             catch (Exception)
             {

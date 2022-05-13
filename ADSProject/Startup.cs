@@ -1,9 +1,11 @@
 using ADSProject.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProyectoADS.Data;
 using ProyectoADS.Repository;
 using System;
 using System.Collections.Generic;
@@ -27,11 +29,17 @@ namespace ADSProject
             services.AddControllersWithViews();
 
             // Inyeccion de dependencias
-            services.AddSingleton<IEstudianteRepository, EstudianteRepository>();
-            services.AddSingleton<IMateriaRepository, MateriaRepository>();
-            services.AddSingleton<IProfesorRepository, ProfesorRepository>();
-            services.AddSingleton<ICarreraRepository, CarreraRepository>();
-            services.AddSingleton<IGrupoRepository, GruposRepository>();
+            services.AddTransient<IEstudianteRepository, EstudianteRepository>();
+            services.AddTransient<IMateriaRepository, MateriaRepository>();
+            services.AddTransient<IProfesorRepository, ProfesorRepository>();
+            services.AddTransient<ICarreraRepository, CarreraRepository>();
+            services.AddTransient<IGrupoRepository, GruposRepository>();
+
+            // Configuracion de BD
+
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

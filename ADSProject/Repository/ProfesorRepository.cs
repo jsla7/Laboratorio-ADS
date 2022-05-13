@@ -1,4 +1,5 @@
-﻿using ProyectoADS.Models;
+﻿using ProyectoADS.Data;
+using ProyectoADS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,11 @@ namespace ProyectoADS.Repository
     {
 
         private readonly List<ProfesorViewModel> lstProfesores;
+        private readonly ApplicationDbContext applicationDbContext;
 
-        public ProfesorRepository()
+        public ProfesorRepository(ApplicationDbContext applicationDbContext)
         {
-            lstProfesores = new List<ProfesorViewModel>
-            {
-                new ProfesorViewModel{ idProfesor = 1, nombresProfesor = "Raul", apellidosProfesor = "Gonzales",
-                    correoProfesor = "rg001@usonsonate.edu.sv"},
-                new ProfesorViewModel{ idProfesor = 2, nombresProfesor = "Manuel", apellidosProfesor = "Urrutia",
-                    correoProfesor = "mu001@usonsonate.edu.sv"}
-
-            };
+            this.applicationDbContext = applicationDbContext;
         }
 
 
@@ -28,15 +23,10 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                if (lstProfesores.Count > 0)
-                {
-                    profesorViewModel.idProfesor = lstProfesores.Last().idProfesor + 1;
-                }
-                else
-                {
-                    profesorViewModel.idProfesor = 1;
-                }
-                lstProfesores.Add(profesorViewModel);
+
+                applicationDbContext.Profesor.Add(profesorViewModel);
+                applicationDbContext.SaveChanges();
+
                 return profesorViewModel.idProfesor;
             }
             catch (Exception)
@@ -50,7 +40,12 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                lstProfesores[lstProfesores.FindIndex(x => x.idProfesor == idProfesor)] = profesorViewModel;
+                var item = applicationDbContext.Profesor.SingleOrDefault(x => x.idProfesor == idProfesor);
+
+                applicationDbContext.Entry(item).CurrentValues.SetValues(profesorViewModel);
+
+                applicationDbContext.SaveChanges();
+
                 return profesorViewModel.idProfesor;
             }
             catch (Exception)
@@ -64,21 +59,18 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                lstProfesores.RemoveAt(lstProfesores.FindIndex(x => x.idProfesor == idProfesor));
+                var item = applicationDbContext.Profesor.SingleOrDefault(x => x.idProfesor == idProfesor);
+
+
+                item.estado = false;
+
+                applicationDbContext.Attach(item);
+
+                applicationDbContext.Entry(item).Property(x => x.estado).IsModified = true;
+
+                applicationDbContext.SaveChanges();
+
                 return true;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public List<ProfesorViewModel> obtenerProfesor()
-        {
-            try
-            {
-                return lstProfesores;
             }
             catch (Exception)
             {
@@ -91,7 +83,7 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                var item = lstProfesores.Find(x => x.idProfesor == idProfesor);
+                var item = applicationDbContext.Profesor.SingleOrDefault(x => x.idProfesor == idProfesor);
                 return item;
             }
             catch (Exception)
@@ -100,5 +92,20 @@ namespace ProyectoADS.Repository
                 throw;
             }
         }
+
+        public List<ProfesorViewModel> obtenerProfesor()
+        {
+            try
+            {
+                // Obtener todos las carreras con filtro (estado = 1)
+                return applicationDbContext.Profesor.Where(x => x.estado == true).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

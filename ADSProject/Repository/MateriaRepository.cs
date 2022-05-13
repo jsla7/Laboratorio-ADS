@@ -1,4 +1,5 @@
 ﻿using ADSProject.Models;
+using ProyectoADS.Data;
 using ProyectoADS.Models;
 using System;
 using System.Collections.Generic;
@@ -11,32 +12,22 @@ namespace ProyectoADS.Repository
     {
 
         private readonly List<MateriasViewModel> lstMaterias;
+        private readonly ApplicationDbContext applicationDbContext;
 
 
-        public MateriaRepository() {
-
-            lstMaterias = new List<MateriasViewModel>
-            {
-            new MateriasViewModel{IdMateria = 1, Materia = "Analisis de sistemas"},
-            new MateriasViewModel{IdMateria = 2, Materia = "Desarrollo de software I"}
-            };
+        public MateriaRepository(ApplicationDbContext applicationDbContext) 
+        {
+            this.applicationDbContext = applicationDbContext;
         }
 
-
-        
         public int agregarMateria(MateriasViewModel materiaViewModel)
         {
             try
             {
-                if (lstMaterias.Count > 0)
-                {
-                    materiaViewModel.IdMateria = lstMaterias.Last().IdMateria + 1;
-                }
-                else
-                {
-                    materiaViewModel.IdMateria = 1;
-                }
-                lstMaterias.Add(materiaViewModel);
+
+                applicationDbContext.Materias.Add(materiaViewModel);
+                applicationDbContext.SaveChanges();
+
                 return materiaViewModel.IdMateria;
             }
             catch (Exception)
@@ -50,7 +41,12 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                lstMaterias[lstMaterias.FindIndex(x => x.IdMateria == IdMateria)] = materiasViewModel;
+                var item = applicationDbContext.Materias.SingleOrDefault(x => x.IdMateria == IdMateria);
+
+                applicationDbContext.Entry(item).CurrentValues.SetValues(materiasViewModel);
+
+                applicationDbContext.SaveChanges();
+
                 return materiasViewModel.IdMateria;
             }
             catch (Exception)
@@ -65,7 +61,16 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                lstMaterias.RemoveAt(lstMaterias.FindIndex(x => x.IdMateria == IdMateria));
+                var item = applicationDbContext.Materias.SingleOrDefault(x => x.IdMateria == IdMateria);
+
+                item.estado = false;
+
+                applicationDbContext.Attach(item);
+
+                applicationDbContext.Entry(item).Property(x => x.estado).IsModified = true;
+
+                applicationDbContext.SaveChanges();
+
                 return true;
             }
             catch (Exception)
@@ -79,7 +84,7 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                var item = lstMaterias.Find(x => x.IdMateria == IdMateria);
+                var item = applicationDbContext.Materias.SingleOrDefault(x => x.IdMateria == IdMateria);
                 return item;
             }
             catch (Exception)
@@ -93,7 +98,7 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                return lstMaterias;
+                return applicationDbContext.Materias.Where(x => x.estado == true).ToList();
             }
             catch (Exception)
             {
