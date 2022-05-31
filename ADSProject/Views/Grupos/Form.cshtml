@@ -75,17 +75,32 @@
                 <input asp-for="anio" class="form-control" />
                 <span asp-validation-for="anio" class="text-danger"></span>
             </div>
+            <input type="checkbox" asp-for="estado" value="true" type="hidden" />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Regresar</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            // Cuando la operacion sobre el formulario es de lectura.
+            if ($("#operacion").val() == "leer") {
+
+                $("form").find("input,select").attr("disabled", true);
+
+            }
+
+        });
+
+        $("form").addClass("form-ajax");
+        initAjaxForm();
+    </script>
 }

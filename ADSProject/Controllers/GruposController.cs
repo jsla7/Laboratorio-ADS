@@ -32,7 +32,7 @@ namespace ProyectoADS.Controllers
         {
             try
             {
-                var item = grupoRepository.obtenerGrupos();
+                var item = grupoRepository.obtenerGrupos(new string[] { "Carreras", "Profesor", "Materias" });
 
                 return View(item);
             }

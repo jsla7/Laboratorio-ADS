@@ -1,8 +1,10 @@
 ﻿@model ProyectoADS.Models.MateriasViewModel
-
+@using ProyectoADS.Models
 @{
     ViewData["Title"] = "Form";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CarrerasViewModel> lstCarreras = new List<CarrerasViewModel>();
+    lstCarreras = ViewBag.Carreras;
 }
 
 <h4> Materia </h4>
@@ -21,7 +23,20 @@
                 <input asp-for="Materia" class="form-control" />
                 <span asp-validation-for="Materia" class="text-danger"></span>
             </div>
-            <input type = "checkbox" asp -for= "estado" value = "true" type = "hidden" />
+
+            <div class="form-group">
+                <label asp-for="idCarrera" class="control-label"></label>
+                <select asp-for="idCarrera" class="form-control">
+                    <option selected disabled>Seleccione una opcion</option>
+                    @foreach (var item in lstCarreras)
+                    {
+                        <option value="@item.idCarrera"> @item.nombreCarrera </option>
+                    }
+                    <span asp-validation-for="idCarrera" class="text-danger"></span>
+                </select>
+            </div>
+
+            <input type="checkbox" asp-for="estado" value="true" type="hidden" />
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
@@ -37,7 +52,8 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 
-        <script>$(document).ready(function () {
+    <script>
+    $(document).ready(function () {
 
             if ($("#operacion").val() == "leer") {
 
@@ -45,11 +61,11 @@
 
             }
 
-            });
+        });
 
 
-            $("form").addClass("form-ajax");
-            initAjaxForm();
+        $("form").addClass("form-ajax");
+        initAjaxForm();
 
 
     </script>

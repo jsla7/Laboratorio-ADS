@@ -9,9 +9,13 @@ namespace ProyectoADS.Repository
     public interface IGrupoRepository
     {
         int agregarGrupo(GrupoViewModel grupoViewModel);
+        
         int actualizarGrupo(int idGrupo, GrupoViewModel grupoViewModel);
+        
         bool eliminarGrupo(int idGrupo);
-        List<GrupoViewModel> obtenerGrupos();
+
+        List<GrupoViewModel> obtenerGrupos(String[] includes);
+        
         GrupoViewModel obtenerGrupoPorId(int idGrupo);
 
     }

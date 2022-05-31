@@ -1,5 +1,7 @@
 ﻿using ADSProject.Utils;
+using ProyectoADS.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ADSProject.Models
 {
@@ -34,7 +36,14 @@ namespace ADSProject.Models
         [Display(Name = "Correo")]
         public string correoEstudiante { get; set; }
 
-        public bool estado{get; set;}
+        public bool estado { get; set; }
+
+        [Display(Name = "Carrera")]
+        [Required(ErrorMessage = Constants.REQUIRED_FIELD)]
+        public int idCarrera { get; set; }
+
+        [ForeignKey("idCarrera")]
+        public CarrerasViewModel Carreras { get; set; }
 
     }
 }

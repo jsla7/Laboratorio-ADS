@@ -1,35 +1,32 @@
 ﻿using ProyectoADS.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System;
+using ProyectoADS.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProyectoADS.Repository
 {
-    public class GruposRepository : IGrupoRepository
+    public class GrupoRepository : IGrupoRepository
     {
-        private readonly List<GrupoViewModel> lstGrupos;
+
+        private readonly ApplicationDbContext applicationDbContext;
 
 
-        public GruposRepository()
+        public GrupoRepository(ApplicationDbContext applicationDbContext)
         {
-            lstGrupos = new List<GrupoViewModel>();
+
+            this.applicationDbContext = applicationDbContext;
+
         }
 
         public int agregarGrupo(GrupoViewModel grupoViewModel)
         {
             try
             {
-                if (lstGrupos.Count > 0)
-                {
-                    grupoViewModel.idGrupo = lstGrupos.Last().idGrupo + 1;
-                }
-                else
-                {
-                    grupoViewModel.idGrupo = 1;
-                }
+                applicationDbContext.Grupos.Add(grupoViewModel);
 
-                lstGrupos.Add(grupoViewModel);
+                applicationDbContext.SaveChanges();
 
                 return grupoViewModel.idGrupo;
             }
@@ -43,7 +40,13 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                lstGrupos[lstGrupos.FindIndex(x => x.idGrupo == idGrupo)] = grupoViewModel;
+                //  lstGrupos[lstGrupos.FindIndex(x => x.idGrupo == idGrupo)] = grupoViewModel;
+
+                var item = applicationDbContext.Grupos.SingleOrDefault(x => x.idGrupo == idGrupo);
+
+                applicationDbContext.Entry(item).CurrentValues.SetValues(grupoViewModel);
+
+                applicationDbContext.SaveChanges();
 
                 return grupoViewModel.idGrupo;
             }
@@ -58,7 +61,17 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                lstGrupos.RemoveAt(lstGrupos.FindIndex(x => x.idGrupo == idGrupo));
+                //   lstGrupos.RemoveAt(lstGrupos.FindIndex(x => x.idGrupo == idGrupo));
+
+                var item = applicationDbContext.Grupos.SingleOrDefault(x => x.idGrupo == idGrupo);
+
+                item.estado = true;
+
+                applicationDbContext.Attach(item);
+
+                applicationDbContext.Entry(item).Property(x => x.estado).IsModified = true;
+
+                applicationDbContext.SaveChanges();
 
                 return true;
             }
@@ -73,9 +86,9 @@ namespace ProyectoADS.Repository
         {
             try
             {
-                var item = lstGrupos.Find(x => x.idGrupo == idGrupo);
+                //var item = lstGrupos.Find(x => x.idGrupo == idGrupo);
 
-                return item;
+                return applicationDbContext.Grupos.SingleOrDefault(x => x.idGrupo == idGrupo);
             }
             catch (Exception)
             {
@@ -84,11 +97,18 @@ namespace ProyectoADS.Repository
             }
         }
 
-        public List<GrupoViewModel> obtenerGrupos()
+        public List<GrupoViewModel> obtenerGrupos(string[] includes)
         {
             try
             {
-                return lstGrupos;
+                var lst = applicationDbContext.Grupos.Where(x => x.estado == true).AsQueryable();
+
+                foreach (var item in includes)
+                {
+                    lst = lst.Include(item);
+                }
+
+                return lst.ToList();
             }
             catch (Exception)
             {
@@ -97,141 +117,28 @@ namespace ProyectoADS.Repository
             }
         }
 
+        // Obtener grupo filtrado
+        public GrupoViewModel obtenerGrupoPorId(int idGrupo, string[] includes)
+        {
+            try
+            {
+                var lst = applicationDbContext.Grupos.Where(x => x.estado == true).AsQueryable();
+
+                if (includes != null && includes.Count() > 0)
+                {
+                    foreach (var item in includes)
+                    {
+                        lst = lst.Include(item);
+                    }
+                }
+
+                return lst.SingleOrDefault(x => x.idGrupo == idGrupo);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
-
-/*
- private readonly List<GrupoViewModel> lstGrupos;
-        List<CarrerasViewModel> lstCarrera;
-        CarreraRepository avc = new CarreraRepository();
-
-        List<MateriasViewModel> lstMateria;
-        MateriaRepository avm = new MateriaRepository();
-
-        List<ProfesorViewModel> lstProf;
-        ProfesorRepository avp = new ProfesorRepository();
-
-
-        public GruposRepository()
-        {
-
-            lstGrupos = new List<GrupoViewModel>
-            {
-            new GrupoViewModel
-            {idGrupo = 1, idCarrera = 1,Carrera = "Ingenieria en Sistemas", idMateria = 1,Materia = "Analisis de sistemas", idProfesor = 1,profesor = "Raul Gonzales", Ciclo = "01", anio = "2022"}
-            };
-        }
-
-
-        public int agregarGrupo(GrupoViewModel grupoViewModel)
-        {
-            try
-            {
-                if (lstGrupos.Count > 0)
-                {
-                    grupoViewModel.idGrupo = lstGrupos.Last().idGrupo + 1;
-                }
-                else
-                {
-                    grupoViewModel.idGrupo = 1;
-                }
-
-                lstCarrera = avc.obtenerCarreras();
-                lstMateria = avm.obtenerMaterias();
-                lstProf = avp.obtenerProfesor();
-
-
-                grupoViewModel.Carrera = 
-                lstCarrera[lstCarrera.FindIndex(x => x.idCarrera == grupoViewModel.idCarrera)].nombreCarrera; ;
-                
-
-                grupoViewModel.Materia =
-                lstMateria[lstMateria.FindIndex(x => x.IdMateria == grupoViewModel.idMateria)].Materia;
-
-                grupoViewModel.profesor =
-                lstProf[lstProf.FindIndex(x => x.idProfesor == grupoViewModel.idProfesor)].nombresProfesor + " " +
-                lstProf[lstProf.FindIndex(x => x.idProfesor == grupoViewModel.idProfesor)].apellidosProfesor;
-
-                lstGrupos.Add(grupoViewModel);
-                return grupoViewModel.idGrupo;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public int actualizarGrupo(int idGrupo, GrupoViewModel grupoViewModel)
-        {
-            try
-            {
-                lstGrupos[lstGrupos.FindIndex(x => x.idGrupo == idGrupo)] = grupoViewModel;
-
-                lstCarrera = avc.obtenerCarreras();
-                lstMateria = avm.obtenerMaterias();
-                lstProf = avp.obtenerProfesor();
-
-                grupoViewModel.Carrera =
-                lstCarrera[lstCarrera.FindIndex(x => x.idCarrera == grupoViewModel.idCarrera)].nombreCarrera; ;
-
-
-                grupoViewModel.Materia =
-                lstMateria[lstMateria.FindIndex(x => x.IdMateria == grupoViewModel.idMateria)].Materia;
-
-                grupoViewModel.profesor =
-                lstProf[lstProf.FindIndex(x => x.idProfesor == grupoViewModel.idProfesor)].nombresProfesor + " " +
-                lstProf[lstProf.FindIndex(x => x.idProfesor == grupoViewModel.idProfesor)].apellidosProfesor;
-
-
-                return grupoViewModel.idCarrera;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-
-        public bool eliminarGrupo(int idGrupo)
-        {
-            try
-            {
-                lstGrupos.RemoveAt(lstGrupos.FindIndex(x => x.idGrupo == idGrupo));
-                return true;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public GrupoViewModel obtenerGrupoPorID(int idGrupo)
-        {
-            try
-            {
-                var item = lstGrupos.Find(x => x.idGrupo == idGrupo);
-                return item;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public List<GrupoViewModel> obtenerGrupos()
-        {
-            try
-            {
-                return lstGrupos;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
- */

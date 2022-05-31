@@ -2,6 +2,7 @@
 using ADSProject.Repository;
 using ADSProject.Utils;
 using Microsoft.AspNetCore.Mvc;
+using ProyectoADS.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace ADSProject.Controllers
     public class EstudianteController : Controller
     {
         private readonly IEstudianteRepository estudianteRepository;
+        private readonly ICarreraRepository carreraRepository;
 
-        public EstudianteController(IEstudianteRepository estudianteRepository)
+        public EstudianteController(IEstudianteRepository estudianteRepository, ICarreraRepository carreraRepository)
         {
             this.estudianteRepository = estudianteRepository;
+            this.carreraRepository = carreraRepository;
         }
 
         [HttpGet]
@@ -23,7 +26,7 @@ namespace ADSProject.Controllers
         {
             try
             {
-                var item = estudianteRepository.obtenerEstudiantes();
+                var item = estudianteRepository.obtenerEstudiantes(new string[] { "Carreras" });
 
                 return View(item);
             }
@@ -47,6 +50,8 @@ namespace ADSProject.Controllers
                     estudiante = estudianteRepository.obtenerEstudiantePorID(idEstudiante.Value);
                 }
                 ViewData["Operaciones"] = operaciones;
+
+                ViewBag.Carreras = carreraRepository.obtenerCarreras();
 
                 return View(estudiante);
 

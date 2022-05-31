@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,13 +18,22 @@ namespace ProyectoADS.Models
         [Display(Name = "Carrera")]
         public int idCarrera { get; set; }
 
+        [ForeignKey("idCarrera")]
+        public CarrerasViewModel Carreras { get; set; }
+
         [Required(ErrorMessage = Constants.REQUIRED_FIELD)]
         [Display(Name = "Materia")]
         public int idMateria { get; set; }
 
+        [ForeignKey("IdMateria")]
+        public MateriasViewModel Materias { get; set; }
+
         [Required(ErrorMessage = Constants.REQUIRED_FIELD)]
         [Display(Name = "Profesor")]
         public int idProfesor { get; set; }
+
+        [ForeignKey("idProfesor")]
+        public ProfesorViewModel Profesor { get; set; }
 
         [Required(ErrorMessage = Constants.REQUIRED_FIELD)]
         [Display(Name = "Ciclo")]

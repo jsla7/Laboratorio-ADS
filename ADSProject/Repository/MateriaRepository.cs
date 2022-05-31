@@ -1,4 +1,5 @@
 ﻿using ADSProject.Models;
+using Microsoft.EntityFrameworkCore;
 using ProyectoADS.Data;
 using ProyectoADS.Models;
 using System;
@@ -94,6 +95,25 @@ namespace ProyectoADS.Repository
             }
         }
 
+        public List<MateriasViewModel> obtenerMaterias(String[] includes)
+        {
+            try
+            {
+                var lst = applicationDbContext.Materias.Where(x => x.estado == true).AsQueryable();
+
+                foreach (var item in includes)
+                {
+                    lst = lst.Include(item);
+                }
+
+                return lst.ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public List<MateriasViewModel> obtenerMaterias()
         {
             try

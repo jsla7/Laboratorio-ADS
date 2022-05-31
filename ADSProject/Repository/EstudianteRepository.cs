@@ -1,4 +1,5 @@
 ﻿using ADSProject.Models;
+using Microsoft.EntityFrameworkCore;
 using ProyectoADS.Data;
 using System;
 using System.Collections.Generic;
@@ -82,6 +83,7 @@ namespace ADSProject.Repository
         {
             try
             {
+                // var item = lstEstudiantes.Find(x => x.idEstudiante == idEstudiante);
                 var item = applicationDbContext.Estudiantes.SingleOrDefault(x => x.idEstudiante == idEstudiante);
                 return item;
             }
@@ -92,13 +94,20 @@ namespace ADSProject.Repository
             }
         }
 
-        public List<EstudianteViewModel> obtenerEstudiantes()
+        public List<EstudianteViewModel> obtenerEstudiantes(String[] includes)
         {
             try
             {
-                
+                var lst = applicationDbContext.Estudiantes.Where(x => x.estado == true).AsQueryable();
+
+                foreach (var item in includes)
+                {
+                    lst = lst.Include(item);
+                }
+
+                return lst.ToList();
                 // Obtener todos los estudiante con filtro (estado = 1)
-                return applicationDbContext.Estudiantes.Where(x => x.estado == true).ToList();
+                //return applicationDbContext.Estudiantes.Where(x => x.estado == true).ToList();
             }
             catch (Exception)
             {

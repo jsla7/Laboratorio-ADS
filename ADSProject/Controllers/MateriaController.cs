@@ -12,10 +12,12 @@ namespace ProyectoADS.Controllers
     public class MateriaController : Controller
     {
         private readonly IMateriaRepository materiaRepository;
+        private readonly ICarreraRepository carreraRepository;
 
-        public MateriaController(IMateriaRepository materiaRepository)
+        public MateriaController(IMateriaRepository materiaRepository, ICarreraRepository carreraRepository)
         {
             this.materiaRepository = materiaRepository;
+            this.carreraRepository = carreraRepository;
         }
 
 
@@ -24,7 +26,7 @@ namespace ProyectoADS.Controllers
         {
             try
             {
-                var item = materiaRepository.obtenerMaterias();
+                var item = materiaRepository.obtenerMaterias(new string[] { "Carreras" });
 
                 return View(item);
             }
@@ -49,6 +51,8 @@ namespace ProyectoADS.Controllers
                 }
 
                 ViewData["Operaciones"] = operaciones;
+
+                ViewBag.Carreras = carreraRepository.obtenerCarreras();
 
                 return View(materia);
 

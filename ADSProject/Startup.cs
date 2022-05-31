@@ -33,7 +33,7 @@ namespace ADSProject
             services.AddTransient<IMateriaRepository, MateriaRepository>();
             services.AddTransient<IProfesorRepository, ProfesorRepository>();
             services.AddTransient<ICarreraRepository, CarreraRepository>();
-            services.AddTransient<IGrupoRepository, GruposRepository>();
+            services.AddTransient<IGrupoRepository, GrupoRepository>();
 
             // Configuracion de BD
 
