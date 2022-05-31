@@ -45,6 +45,7 @@ namespace ProyectoADS.Models
 
         public bool estado { get; set; }
 
+        public ICollection<AsignacionGrupoViewModel> AsignacionGrupos { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ADSProject.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoADS.Models;
 using ProyectoADS.Repository;
@@ -119,6 +120,16 @@ namespace ProyectoADS.Controllers
 
                 throw;
             }
+        }
+
+        [HttpGet]
+        public IActionResult cargarMaterias(int? idCarrera)
+        {
+            var listadoCarreras = idCarrera == null ? new List<MateriasViewModel>() :
+
+            materiaRepository.obtenerMaterias().Where(x => x.idCarrera == idCarrera);
+
+            return StatusCode(StatusCodes.Status200OK, listadoCarreras);
         }
 
 

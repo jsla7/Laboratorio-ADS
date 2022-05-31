@@ -65,7 +65,7 @@ namespace ProyectoADS.Repository
 
                 var item = applicationDbContext.Grupos.SingleOrDefault(x => x.idGrupo == idGrupo);
 
-                item.estado = true;
+                item.estado = false;
 
                 applicationDbContext.Attach(item);
 
@@ -140,5 +140,6 @@ namespace ProyectoADS.Repository
                 throw;
             }
         }
+
     }
 }

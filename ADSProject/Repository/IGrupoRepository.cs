@@ -15,7 +15,9 @@ namespace ProyectoADS.Repository
         bool eliminarGrupo(int idGrupo);
 
         List<GrupoViewModel> obtenerGrupos(String[] includes);
-        
+
+        GrupoViewModel obtenerGrupoPorId(int idGrupo, String[] includes);
+
         GrupoViewModel obtenerGrupoPorId(int idGrupo);
 
     }

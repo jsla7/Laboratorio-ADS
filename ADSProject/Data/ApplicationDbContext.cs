@@ -24,6 +24,7 @@ namespace ProyectoADS.Data
         public DbSet<ProfesorViewModel> Profesor { get; set; }
 
         public DbSet<GrupoViewModel> Grupos { get; set; }
+        public DbSet<AsignacionGrupoViewModel> AsignacionGrupos { get; set; }
 
 
 

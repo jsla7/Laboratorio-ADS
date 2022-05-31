@@ -71,16 +71,21 @@
 
     <td>
         <a class="btn btn-primary"
-           asp-route-idEstudiante="@item.idGrupo"
+           asp-route-idGrupo="@item.idGrupo"
            asp-action="Form"
            asp-route-operaciones="@Operaciones.modificar">Modificar</a>
         <a class="btn btn-warning"
-           asp-route-idEstudiante="@item.idGrupo"
+           asp-route-idGrupo="@item.idGrupo"
            asp-action="Form"
            asp-route-operaciones="@Operaciones.leer">Leer</a>
         <a class="btn btn-danger eliminar"
-           asp-route-idEstudiante="@item.idGrupo"
+           asp-route-idGrupo="@item.idGrupo"
            asp-action="Delete">Eliminar</a>
+
+        <a class="btn btn-secondary"
+           asp-route-idGrupo="@item.idGrupo"
+           asp-action="Form" asp-controller="AsignacionGrupo">Asignar Grupo</a>
+
     </td>
 </tr>}
     </tbody>

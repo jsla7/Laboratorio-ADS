@@ -1,5 +1,6 @@
 ﻿using ADSProject.Utils;
 using ProyectoADS.Models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -44,6 +45,7 @@ namespace ADSProject.Models
 
         [ForeignKey("idCarrera")]
         public CarrerasViewModel Carreras { get; set; }
+        public ICollection<AsignacionGrupoViewModel> AsignacionGrupos { get; set; }
 
     }
 }
